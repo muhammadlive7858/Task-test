@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -27,7 +26,11 @@ class AuthController extends Controller
 
         $token = $user->createToken('token-name')->plainTextToken;
 
-        return response()->json(['token' => $token], 201);
+        return response()->json([
+            'status'=> true,
+            'message' => 'User created successfully',
+            'token' => $token
+        ], 201);
     }
 
     public function login(Request $request)
@@ -44,7 +47,10 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken('token-name')->plainTextToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json([
+            'status'=> true,
+            'token' => $token,
+        ], 200);
     }
 
     public function logout(Request $request)
