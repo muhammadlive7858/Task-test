@@ -14,6 +14,15 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         // dd('test');
+        $email = User::where('email',$request->email)->get();
+
+        if($email){
+            return response()_.json([
+                'status'=>false,
+                'message'=>'Such a user exists'
+            ]);
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -37,7 +46,7 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'The user does not exist'], 401);
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
